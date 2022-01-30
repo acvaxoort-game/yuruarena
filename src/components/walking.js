@@ -17,6 +17,9 @@ export default class WalkingComponent extends ComponentBase {
 
     walkInDirection(directionVec, multiplier = 1) {
         const entity = this.entity;
+        if (entity.z > 0) {
+            return;
+        }
         entity.vel.addInPlace(
             directionVec.normalise().mul(this.acceleration).mul(multiplier));
         let velNorm = entity.vel.norm();

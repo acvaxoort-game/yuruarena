@@ -5,6 +5,7 @@ export default class SlimeBehaviourComponent extends ComponentBase {
 
     constructor() {
         super();
+        this.attack = 5;
         this.verticalLaunch = 10;
         this.horizontalLaunch = 2.5;
         this.jumpCooldown = 3;
@@ -44,34 +45,33 @@ export default class SlimeBehaviourComponent extends ComponentBase {
         if (this.jumpDelay > 0) {
             this.jumpDelay -= dt;
             if (entity.z == 0) {
-                simpleAnimation.animation.setFrame(0);
-                entity.applyFriction = true;
+                //simpleAnimation.animation.setFrame(0);
+                //entity.applyFriction = true;
             }
         } else {
-            let target = null;
-            for (let e of entity.world.entities) {
-                if (e.team != entity.team && e.targetable) {
-                    target = e;
-                }
-            }
+            let target = entity.getClosestEnemy();
             if (entity.z == 0 && target) {
-                entity.applyFriction = false;
-                let jumpDuration = 2 * this.verticalLaunch / entity.gravity;
-                let jumpDistance = jumpDuration * this.horizontalLaunch;
-                let targetVector = target.pos.add(target.vel.mul(jumpDuration * 0.5)).sub(entity.pos);
+                //entity.applyFriction = false;
+                const jumpDuration = 2 * this.verticalLaunch / entity.gravity;
+                const jumpDistance = jumpDuration * this.horizontalLaunch;
+                const targetVector = target.pos.sub(entity.pos);
                 let targetDistance = targetVector.norm();
+                if (Math.random() < 0.5) {
+                    targetVector.addInPlace(target.vel.mul(jumpDuration * 0.5));
+                    targetDistance = targetVector.norm();
+                }
                 if (targetDistance > jumpDistance) {
                     this.jumpDelay = this.jumpCooldown;
                     entity.velZ = this.verticalLaunch;
                     entity.vel = targetVector.normalise().mul(this.horizontalLaunch);
                 } else {
                     if (jumpDistance > 0) {
-                        this.jumpDelay = this.jumpCooldown * (0.33 + 0.67 * targetDistance / jumpDistance);
+                        this.jumpDelay = this.jumpCooldown * (0.4 + 0.6 * targetDistance / jumpDistance) * (0.8 + 0.4 * Math.random());
                         entity.velZ = this.verticalLaunch * targetDistance / jumpDistance;
                         entity.vel = targetVector.normalise().mul(this.horizontalLaunch);
                     }
                 }
-                simpleAnimation.animation.setFrame(1);
+                //simpleAnimation.animation.setFrame(1);
             }
         }
     }
@@ -81,7 +81,11 @@ export default class SlimeBehaviourComponent extends ComponentBase {
         if (otherEntity.team != entity.team) {
             if (this.attackDelay <= 0) {
                 this.attackDelay = this.attackCooldown;
+                otherEntity.knockBackFrom(2, entity.pos);
                 console.log("dealt damage");
+                if (otherEntity.components.damageTaker) {
+                    otherEntity.components.damageTaker.damage(this.attack);
+                }
             }
         }
     }

@@ -2,16 +2,24 @@ import ComponentBase from "./componentbase.js";
 import Entity from "../entity.js";
 import TemporaryAnimationComponent from "./temporaryanimation.js";
 import AttachToEntityComponent from "./attachtoentitty.js";
+import World from "../world.js";
 
 export default class MeleeAttackComponent extends ComponentBase {
     static get name() { return "meleeAttack"; }
 
     constructor() {
         super();
+        this.attack = 5;
         this.slashAnimation = null;
         this.slashCooldown = 1;
         this.slashDelay = this.slashCooldown;
         this.slashRange = 1;
+        this.knockback = 2;
+    }
+
+    setAttack(attack) {
+        this.attack = attack;
+        return this;
     }
 
     setSlashAnimation(anim) {
@@ -35,12 +43,7 @@ export default class MeleeAttackComponent extends ComponentBase {
         if (this.slashDelay > 0) {
             this.slashDelay -= dt;
         } else {
-            let target = null;
-            for (let e of entity.world.entities) {
-                if (e.team != entity.team && e.targetable) {
-                    target = e;
-                }
-            }
+            let target = entity.getClosestEnemyInRange(this.slashRange);
             if (target) {
                 this.slashDelay = this.slashCooldown;
                 const dir = target.pos.sub(entity.pos).normalise();
@@ -57,18 +60,16 @@ export default class MeleeAttackComponent extends ComponentBase {
                     .setTarget(entity)
                     .setRelativePosition(offset)
                     .attach(slash);
-                slash.team = -1;
                 slash.collisionEnabled = false;
                 slash.targetable = false;
-                entity.world.addEntity(slash);
+                entity.world.addEntity(slash, World.getProjectileTeam(entity.team));
                 const attackRadius = this.slashRange * 0.5;
                 const attackMiddle = entity.pos.add(offset);
-                for (let e of entity.world.entities) {
-                    if (e.team != entity.team && e.targetable && e.z < 2) {
+                for (let e of entity.getEnemies()) {
+                    if (e.components.damageTaker && e.z < 1) {
                         if (attackMiddle.sub(e.pos).norm() < attackRadius + e.radius) {
-                            console.log("slash hit");
-                            let kbDir = e.pos.sub(entity.pos).normalise();
-                            e.accelerate(kbDir.mul(15 / e.mass));
+                            e.knockBackFrom(this.knockback, entity.pos);
+                            e.components.damageTaker.damage(this.attack);
                         }
                     }
                 }
@@ -76,6 +77,7 @@ export default class MeleeAttackComponent extends ComponentBase {
         }
     }
 
+    /*
     onDraw(layers) {
         const entity = this.entity;
         let pixelCoordsShadow = entity.getPixelCoordinatesShadow();
@@ -85,5 +87,5 @@ export default class MeleeAttackComponent extends ComponentBase {
         shadows.ellipse(pixelCoordsShadow.x, pixelCoordsShadow.y, this.slashRange * 256 / 20, this.slashRange * 208 / 20, 0, 0, Math.PI * 2);
         shadows.closePath();
         shadows.stroke();
-    }
+    }*/
 }

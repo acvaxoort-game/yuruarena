@@ -1,6 +1,6 @@
 import * as util from "./util.js";
 
-export default class SmoothParameter {
+export default class Animation {
     constructor(imgs_array, frequency = 1, scale = 1) {
         this.imgs_array = imgs_array;
         this.frequency = frequency;

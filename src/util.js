@@ -4,6 +4,10 @@ export class Vec2D {
         this.y = y;
     }
 
+    static fromAngle(angle) {
+        return new Vec2D(Math.cos(angle), Math.sin(angle));
+    }
+
     normSqr() {
         return this.x * this.x + this.y * this.y;
     }
