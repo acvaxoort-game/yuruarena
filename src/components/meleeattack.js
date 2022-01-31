@@ -5,7 +5,7 @@ import AttachToEntityComponent from "./attachtoentitty.js";
 import World from "../world.js";
 
 export default class MeleeAttackComponent extends ComponentBase {
-    static get name() { return "meleeAttack"; }
+    get componentName() { return "meleeAttack"; }
 
     constructor() {
         super();

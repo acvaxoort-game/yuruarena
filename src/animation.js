@@ -6,7 +6,7 @@ export default class Animation {
         this.frequency = frequency;
         this.accumulator = 0;
         this.frame = 0;
-        this.scale = scale
+        this.scale = scale;
         console.log(imgs_array);
     }
 

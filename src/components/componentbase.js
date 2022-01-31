@@ -1,24 +1,32 @@
 export default class ComponentBase {
-    static get name() { return "invalid"; }
+    get componentName() { return "invalid"; }
 
     constructor() {
         this.entity = null;
         this.priority = 0;
     }
 
+    onUpdate(dt) { }
+
+    onDraw(layers) { }
+
+    onCollision(other) { }
+
+    onDeath() { }
+
     attach(entity) {
         this.entity = entity;
-        entity.addComponent(this.constructor.name, this);
-        if (typeof this.onUpdate == "function") {
+        entity.addComponent(this.componentName, this);
+        if (this.onUpdate != ComponentBase.prototype.onUpdate) {
             entity.addUpdateListener(this);
         }
-        if (typeof this.onDraw == "function") {
+        if (this.onDraw != ComponentBase.prototype.onDraw) {
             entity.addDrawListener(this);
         }
-        if (typeof this.onCollision == "function") {
+        if (this.onCollision != ComponentBase.prototype.onCollision) {
             entity.addCollisionListener(this);
         }
-        if (typeof this.onDeath == "function") {
+        if (this.onDeath != ComponentBase.prototype.onDeath) {
             entity.addDeathListener(this);
         }
     }

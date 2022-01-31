@@ -2,7 +2,7 @@ import ComponentBase from "./componentbase.js";
 import * as util from "./../util.js";
 
 export default class ChasingAIComponent extends ComponentBase {
-    static get name() { return "chasingAI"; }
+    get componentName() { return "chasingAI"; }
 
     constructor() {
         super();
@@ -27,7 +27,11 @@ export default class ChasingAIComponent extends ComponentBase {
             this.target = entity.getClosestEnemy();
         }
         if (this.waypointChangeDelay > 0) {
-            this.waypointChangeDelay -= dt;
+            if (this.waypoint) {
+                this.waypointChangeDelay -= dt;
+            } else {
+                this.waypointChangeDelay -= 2 * dt;
+            }
         } else {
             this.waypointChangeDelay = 0.15 + Math.random() * 0.15;
             if (this.target) {

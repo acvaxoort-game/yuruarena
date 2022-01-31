@@ -42,22 +42,22 @@ export default class Entity {
 
     addUpdateListener(component) {
         this.updateListeners.push(component);
-        this.updateListeners.sort((a, b) => { b.priority - a.priority });
+        this.updateListeners.sort((a, b) => { return b.priority - a.priority; });
     }
 
     addDrawListener(component) {
         this.drawListeners.push(component);
-        this.drawListeners.sort((a, b) => { b.priority - a.priority });
+        this.drawListeners.sort((a, b) => { return b.priority - a.priority; });
     }
 
     addCollisionListener(component) {
         this.collisionListeners.push(component);
-        this.collisionListeners.sort((a, b) => { b.priority - a.priority });
+        this.collisionListeners.sort((a, b) => { return b.priority - a.priority; });
     }
 
     addDeathListener(component) {
         this.deathListeners.push(component);
-        this.deathListeners.sort((a, b) => { b.priority - a.priority });
+        this.deathListeners.sort((a, b) => { return b.priority - a.priority; });
     }
 
     update(dt) {

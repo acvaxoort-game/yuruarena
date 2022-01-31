@@ -1,7 +1,7 @@
 import ComponentBase from "./componentbase.js";
 
 export default class WalkingComponent extends ComponentBase {
-    static get name() { return "walking"; }
+    get componentName() { return "walking"; }
 
     constructor() {
         super();

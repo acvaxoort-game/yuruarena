@@ -1,7 +1,7 @@
 import ComponentBase from "./componentbase.js";
 
 export default class SlimeBehaviourComponent extends ComponentBase {
-    static get name() { return "slimeBehaviour"; }
+    get componentName() { return "slimeBehaviour"; }
 
     constructor() {
         super();

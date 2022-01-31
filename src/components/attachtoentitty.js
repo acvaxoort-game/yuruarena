@@ -2,7 +2,7 @@ import ComponentBase from "./componentbase.js";
 import * as util from "./../util.js";
 
 export default class AttachToEntityComponent extends ComponentBase {
-    static get name() { return "attachToEntity"; }
+    get componentName() { return "attachToEntity"; }
 
     constructor() {
         super();

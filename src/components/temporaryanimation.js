@@ -1,7 +1,7 @@
 import ComponentBase from "./componentbase.js";
 
 export default class TemporaryAnimationComponent extends ComponentBase {
-    static get name() { return "temporaryAnimation"; }
+    get componentName() { return "temporaryAnimation"; }
 
     constructor() {
         super();

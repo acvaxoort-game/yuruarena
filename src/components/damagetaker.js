@@ -1,7 +1,7 @@
 import ComponentBase from "./componentbase.js";
 
 export default class DamageTakerComponent extends ComponentBase {
-    static get name() { return "damageTaker"; }
+    get componentName() { return "damageTaker"; }
 
     constructor() {
         super();

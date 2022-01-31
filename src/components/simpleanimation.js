@@ -1,7 +1,7 @@
 import ComponentBase from "./componentbase.js";
 
 export default class SimpleAnimationComponent extends ComponentBase {
-    static get name() { return "simpleAnimation"; }
+    get componentName() { return "simpleAnimation"; }
 
     constructor() {
         super();
